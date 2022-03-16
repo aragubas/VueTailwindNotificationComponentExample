@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/dist/output.css">
+  <script src="./vue.js"></script>
+  <title>Sinas</title>
+</head>
+
+<body class="bg-slate-800 text-slate-200">
+
+  <div id="app">
+    <header class="relative">
+      <div class="bg-slate-700 flex shadow-md p-1 justify-between items-center">
+        <div>
+          <h1 class="text-slate-400 text-xl">Notification Component Examples</h1>
+        </div>
+
+        <ul class="flex gap-2">
+          <li><a href="#" class="button" @click="toggleMessages()">Show Messages</a></li>
+        </ul>
+      </div>
+    </header>
+
+    <div :class="messagesVisible ? 'messages-visible' : 'messages-hidden'" class="messages-container absolute">
+      <ul class="overflow-y-scroll" id="messagesList">
+        <p v-if="notifications.length < 1" class="text-base p-1">No notifications.</p>
+
+        <li v-for="notification in notifications" :class="notification.urgent ? 'font-bold text-white' : 'text-slate-200'" class="flex justify-between hover:bg-slate-700 items-center border-solid border-b border-l border-slate-700">
+
+          <p class="p-1">{{notification.message}}</p>
+          <p v-if="notification.count > 1" class="mr-1.5 font-bold">{{notification.count}}</p>
+        </li>
+      </ul>
+
+      <div class="flex justify-between items-center p-1 text-sm rounded-b-md bg-slate-700">
+        <p>Notifications</p>
+        <a href="#" @click="closeMessages()" class="button">X</a>
+      </div>
+    </div>
+
+    <main class="p-3">
+      <h1 class="text-xl">Notifications component made with VueJS + Tailwind CSS by <a href="https://github.com/aragubas">Aragubas</a></h1>
+
+      <form class="flex flex-col gap-2 mt-5">
+        <h1 class="text-xl">Send Test Notification</h1>
+        <p class="text-slate-400">Text</p>
+        <input type="text" v-model="notificationExampleText" class="bg-slate-500">
+
+        <div class="flex items-center gap-3">
+          <p class="text-slate-400">Urgent</p>
+          <input type="checkbox" v-model="notificationExampleUrgent" id="urgentCheckbox">
+        </div>
+
+        <button @click="addMessage(notificationExampleText, notificationExampleUrgent)" class="button">Notify</button>
+        <button @click="spamMessage()" class="button">Le Spam</button>
+      </form>
+
+    </main>
+  </div>
+
+  <script>
+    const vm = new Vue({
+      el: "#app",
+      data: {
+        messagesVisible: false,
+        notificationExampleText: "",
+        notificationExampleUrgent: false,
+        notifications: [{ message: "ceira", urgent: false, count: 1 }, { message: "sinas", urgent: false, count: 1 }, { message: "caldo de pilha", urgent: true, count: 1 }]
+      },
+      watch:
+      {
+        notifications() {
+          if (this.notifications.length >= 1) { this.messagesVisible = true; }
+
+          if (this.notifications.length < 1 && this.messagesVisible) {
+            setTimeout(() => {
+              if (this.notifications.length < 1) {
+                this.messagesVisible = false;
+
+              }
+            }, 1500)
+          }
+
+        },
+        messagesVisible() {
+          if (this.notifications.length < 1 && this.messagesVisible) {
+            setTimeout(() => {
+              if (this.notifications.length < 1) {
+                this.messagesVisible = false;
+
+              }
+            }, 1500)
+          }
+        }
+      },
+      methods:
+      {
+        toggleMessages() { this.messagesVisible = !this.messagesVisible; },
+        addMessage(text, urgent) {
+          if (text.length < 1) { return; }
+          let notificationExists = false
+
+          this.notifications.forEach(notification => {
+            if (notification.message == text && notification.urgent == urgent) { notification.count++; notificationExists = true; }
+          });
+
+          if (!notificationExists) {
+            const el = document.querySelector("#messages-list")
+
+            console.log(el)
+
+            this.notifications.push({ message: text, urgent: urgent, count: 1 });
+          }
+        },
+        closeMessages() {
+          this.messagesVisible = false
+
+          setTimeout(() => {
+            this.notifications = []
+
+          }, 400);
+        },
+        spamMessage() {
+          for (i = 0; i < 20; i++) {
+            this.addMessage(i, i % 2);
+          }
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.button {
+  transition: background 0.2s;
+  @apply bg-slate-600 inline-block rounded-sm select-none;
+  padding: 0.1rem 0.25rem;
+}
+
+a {
+  @apply text-white;
+}
+
+.button:hover {
+  @apply bg-slate-500 text-white;
+}
+
+.messages-visible {
+  top: 0%;
+  opacity: 1;
+}
+
+.messages-hidden {
+  top: -100%;
+  opacity: 0;
+}
+
+.messages-container {
+  transition: opacity 0.3s linear, top 0.5s ease-in-out;
+  @apply shadow-lg;
+
+  min-width: 80%;
+  left: calc(100% / 2 - 80% / 2);
+}
+
+.messages-container ul {
+  @apply bg-slate-600;
+  max-height: 35vh;
+}
+
+.messages-container ul::-webkit-scrollbar {
+  @apply bg-slate-700;
+  width: 8px;
+  height: 8px;
+}
+
+.messages-container ul::-webkit-scrollbar-thumb {
+  @apply bg-slate-600;
+  background-clip: content-box;
+  border-radius: 8px;
+  border: 2px solid transparent;
+}
+
+@media (max-width: 640px) {
+  .messages-container {
+    width: 100%;
+    left: 0;
+  }
+}
